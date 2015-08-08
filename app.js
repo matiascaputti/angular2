@@ -34,6 +34,10 @@ var Article = (function () {
         this.link = link;
         this.votes = 0;
     }
+    Article.prototype.domain = function () {
+        var link = this.link.split('//')[1];
+        return link.split('/')[0];
+    };
     Article.prototype.voteUp = function () {
         this.votes += 1;
         return false;
@@ -53,7 +57,7 @@ var ArticleApp = (function () {
             properties: ['article'],
         }),
         angular2_1.View({
-            template: "\n        <article>\n            <div class=\"votes\">{{ article.votes }}</div>\n            <div class=\"main\">\n                <h2>\n                    <a href=\"{{ article.link }}\">{{ article.title }}</a>\n                </h2>\n                <ul>\n                    <li>\n                        <a href (click)='article.voteUp()'>upvote</a>\n                    </li>\n                    <li>\n                        <a href (click)='article.voteDown()'>downvote</a>\n                    </li>\n                </ul>\n            </div>\n        </article>\n    "
+            template: "\n        <article>\n            <div class=\"votes\">{{ article.votes }}</div>\n            <div class=\"main\">\n                <h2>\n                    <a href=\"{{ article.link }}\">{{ article.title }}</a>\n                    <span>({{ article.domain() }})</span>\n                </h2>\n                <ul>\n                    <li>\n                        <a href (click)='article.voteUp()'>upvote</a>\n                    </li>\n                    <li>\n                        <a href (click)='article.voteDown()'>downvote</a>\n                    </li>\n                </ul>\n            </div>\n        </article>\n    "
         }), 
         __metadata('design:paramtypes', [])
     ], ArticleApp);
@@ -67,7 +71,9 @@ var ConsoleApp = (function () {
         ];
     }
     ConsoleApp.prototype.addArticle = function (title, link) {
-        console.log("Adding article with title", title.value, "and link", link.value);
+        this.articles.push(new Article(title.value, link.value));
+        title.value = '';
+        link.value = '';
     };
     ConsoleApp = __decorate([
         angular2_1.Component({

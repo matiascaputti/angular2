@@ -52,6 +52,11 @@ class Article {
         this.votes = 0;
     }
 
+    domain() {
+        var link = this.link.split('//')[1];
+        return link.split('/')[0];
+    }
+
     voteUp() {
         this.votes += 1;
         return false;
@@ -80,6 +85,7 @@ class Article {
             <div class="main">
                 <h2>
                     <a href="{{ article.link }}">{{ article.title }}</a>
+                    <span>({{ article.domain() }})</span>
                 </h2>
                 <ul>
                     <li>
@@ -137,7 +143,10 @@ class ConsoleApp {
     }
 
     addArticle(title, link) {
-        console.log("Adding article with title", title.value, "and link", link.value);
+        this.articles.push(new Article(title.value, link.value));
+        title.value = '';
+        link.value = '';
+        //console.log("Adding article with title", title.value, "and link", link.value);
     }
 }
 
