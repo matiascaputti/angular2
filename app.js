@@ -13,13 +13,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var angular2_1 = require("angular2/angular2");
 var HelloWorld = (function () {
     function HelloWorld() {
+        this.name = 'Matias';
+        this.names = ['Pepe', 'Juan', 'Pedro'];
     }
     HelloWorld = __decorate([
         angular2_1.Component({
             selector: 'hello-world'
         }),
         angular2_1.View({
-            template: "\n        <div>\n            Hello world!!!!\n        </div>\n    "
+            directives: [angular2_1.NgFor],
+            template: "\n        <div>\n            <article>\n                Hello {{ name }}\n            </article>\n        </div>\n        <div>\n            <ul>\n                <li *ng-for=\"#name of names\">Hello {{ name }}</li>\n            </ul>\n        </div>\n    "
         }), 
         __metadata('design:paramtypes', [])
     ], HelloWorld);
