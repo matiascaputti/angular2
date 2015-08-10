@@ -72,6 +72,15 @@ var ProductsService = (function () {
             new Product('Fullstack', 'http://fullstack.io')
         ];
     }
+    ;
+    ProductsService.prototype.getProducts = function () {
+        return this.products;
+    };
+    ;
+    ProductsService.prototype.addProduct = function (product) {
+        this.products.push(product);
+    };
+    ;
     return ProductsService;
 })();
 var ProductRow = (function () {
@@ -91,7 +100,7 @@ var ProductRow = (function () {
 })();
 var ProductsList = (function () {
     function ProductsList(productsService) {
-        this.products = productsService.products;
+        this.products = productsService.getProducts();
     }
     ProductsList = __decorate([
         angular2_1.Component({
@@ -107,10 +116,14 @@ var ProductsList = (function () {
     return ProductsList;
 })();
 var ProductForm = (function () {
-    function ProductForm() {
+    function ProductForm(productsService) {
+        this.productsService = productsService;
+        this.products = productsService.getProducts();
     }
     ProductForm.prototype.addProduct = function (title, link) {
+        this.productsService.addProduct(new Product(title.value, link.value));
         console.log("Adding product with title", title.value, "and link", link.value);
+        console.log(this.productsService.getProducts());
         title.value = '';
         link.value = '';
     };
@@ -122,7 +135,7 @@ var ProductForm = (function () {
         angular2_1.View({
             templateUrl: 'views/ProductForm.html'
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [ProductsService])
     ], ProductForm);
     return ProductForm;
 })();

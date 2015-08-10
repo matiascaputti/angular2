@@ -87,7 +87,15 @@ class ProductsService {
             new Product('Angular 2', 'http://angular.io'),
             new Product('Fullstack', 'http://fullstack.io')
         ];
-    }
+    };
+
+    getProducts() {
+        return this.products;
+    };
+
+    addProduct(product: Product) {
+        this.products.push(product);
+    };
 }
 
 // Product Row component
@@ -120,7 +128,7 @@ class ProductsList {
     products: Array<Product>;
 
     constructor(productsService: ProductsService) {
-        this.products = productsService.products;
+        this.products = productsService.getProducts();
     }
 }
 
@@ -136,9 +144,16 @@ class ProductsList {
 })
 
 class ProductForm {
+    products: Array<Product>;
+
+    constructor(public productsService: ProductsService) {
+        this.products = productsService.getProducts();
+    }
+
     addProduct(title, link) {
-        //this.products.push(new Product(title.value, link.value));
+        this.productsService.addProduct(new Product(title.value, link.value));
         console.log("Adding product with title", title.value, "and link", link.value);
+        console.log(this.productsService.getProducts());
         title.value = '';
         link.value = '';
     }
