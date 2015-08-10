@@ -144,10 +144,7 @@ class ProductsList {
 })
 
 class ProductForm {
-    products: Array<Product>;
-
     constructor(public productsService: ProductsService) {
-        this.products = productsService.getProducts();
     }
 
     addProduct(title, link) {

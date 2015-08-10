@@ -118,7 +118,6 @@ var ProductsList = (function () {
 var ProductForm = (function () {
     function ProductForm(productsService) {
         this.productsService = productsService;
-        this.products = productsService.getProducts();
     }
     ProductForm.prototype.addProduct = function (title, link) {
         this.productsService.addProduct(new Product(title.value, link.value));
