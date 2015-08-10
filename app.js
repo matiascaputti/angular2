@@ -1,4 +1,3 @@
-/// <reference path="typings/angular2/angular2.d.ts" />
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target, key, desc);
     switch (arguments.length) {
@@ -10,81 +9,136 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+/// <reference path="typings/angular2/angular2.d.ts" />
 var angular2_1 = require("angular2/angular2");
-var HeaderApp = (function () {
-    function HeaderApp() {
-        this.name = 'Matias';
+var MyHeader = (function () {
+    function MyHeader() {
+        this.myName = 'Matias';
         this.names = ['Pepe', 'Juan', 'Pedro'];
     }
-    HeaderApp = __decorate([
+    MyHeader = __decorate([
         angular2_1.Component({
-            selector: 'test-header'
+            selector: 'my-header'
         }),
         angular2_1.View({
             directives: [angular2_1.NgFor],
-            template: "\n        <div class=\"header\">\n            <div>\n                <article>\n                    Hello {{ name }}\n                </article>\n            </div>\n            <div>\n                <ul class=\"list\">\n                    <li class=\"list-item\" *ng-for=\"#name of names\">Hello {{ name }}</li>\n                </ul>\n            </div>\n        </div>\n    "
+            templateUrl: 'views/MyHeader.html'
         }), 
         __metadata('design:paramtypes', [])
-    ], HeaderApp);
-    return HeaderApp;
+    ], MyHeader);
+    return MyHeader;
 })();
-var Article = (function () {
-    function Article(title, link) {
+var MyFooter = (function () {
+    function MyFooter() {
+        this.myName = 'Matias';
+        this.names = ['Pepe', 'Juan', 'Pedro'];
+    }
+    MyFooter = __decorate([
+        angular2_1.Component({
+            selector: 'my-footer'
+        }),
+        angular2_1.View({
+            directives: [angular2_1.NgFor],
+            templateUrl: 'views/MyFooter.html'
+        }), 
+        __metadata('design:paramtypes', [])
+    ], MyFooter);
+    return MyFooter;
+})();
+var Product = (function () {
+    function Product(title, link) {
         this.title = title;
         this.link = link;
         this.votes = 0;
     }
-    Article.prototype.domain = function () {
+    Product.prototype.domain = function () {
         var link = this.link.split('//')[1];
         return link.split('/')[0];
     };
-    Article.prototype.voteUp = function () {
-        this.votes += 1;
+    Product.prototype.voteUp = function () {
+        this.votes++;
         return false;
     };
-    Article.prototype.voteDown = function () {
-        this.votes -= 1;
+    Product.prototype.voteDown = function () {
+        this.votes--;
         return false;
     };
-    return Article;
+    return Product;
 })();
-var ArticleApp = (function () {
-    function ArticleApp() {
-    }
-    ArticleApp = __decorate([
-        angular2_1.Component({
-            selector: 'test-article',
-            properties: ['article'],
-        }),
-        angular2_1.View({
-            template: "\n        <article>\n            <div class=\"votes\">{{ article.votes }}</div>\n            <div class=\"main\">\n                <h2>\n                    <a href=\"{{ article.link }}\">{{ article.title }}</a>\n                    <span>({{ article.domain() }})</span>\n                </h2>\n                <ul>\n                    <li>\n                        <a href (click)='article.voteUp()'>upvote</a>\n                    </li>\n                    <li>\n                        <a href (click)='article.voteDown()'>downvote</a>\n                    </li>\n                </ul>\n            </div>\n        </article>\n    "
-        }), 
-        __metadata('design:paramtypes', [])
-    ], ArticleApp);
-    return ArticleApp;
-})();
-var ConsoleApp = (function () {
-    function ConsoleApp() {
-        this.articles = [
-            new Article('Angular 2', 'http://angular.io'),
-            new Article('Fullstack', 'http://fullstack.io')
+var ProductsService = (function () {
+    function ProductsService() {
+        this.products = [
+            new Product('Angular 2', 'http://angular.io'),
+            new Product('Fullstack', 'http://fullstack.io')
         ];
     }
-    ConsoleApp.prototype.addArticle = function (title, link) {
-        this.articles.push(new Article(title.value, link.value));
+    return ProductsService;
+})();
+var ProductRow = (function () {
+    function ProductRow() {
+    }
+    ProductRow = __decorate([
+        angular2_1.Component({
+            selector: 'product-row',
+            properties: ['product: named-product'],
+        }),
+        angular2_1.View({
+            templateUrl: 'views/ProductRow.html'
+        }), 
+        __metadata('design:paramtypes', [])
+    ], ProductRow);
+    return ProductRow;
+})();
+var ProductsList = (function () {
+    function ProductsList(productsService) {
+        this.products = productsService.products;
+    }
+    ProductsList = __decorate([
+        angular2_1.Component({
+            selector: 'products-list',
+            appInjector: [ProductsService]
+        }),
+        angular2_1.View({
+            directives: [angular2_1.NgFor, ProductRow],
+            templateUrl: 'views/ProductList.html'
+        }), 
+        __metadata('design:paramtypes', [ProductsService])
+    ], ProductsList);
+    return ProductsList;
+})();
+var ProductForm = (function () {
+    function ProductForm() {
+    }
+    ProductForm.prototype.addProduct = function (title, link) {
+        console.log("Adding product with title", title.value, "and link", link.value);
         title.value = '';
         link.value = '';
     };
-    ConsoleApp = __decorate([
+    ProductForm = __decorate([
         angular2_1.Component({
-            selector: 'test-console'
+            selector: 'product-form',
+            appInjector: [ProductsService]
         }),
         angular2_1.View({
-            directives: [angular2_1.NgFor, ArticleApp, HeaderApp],
-            template: "\n        <test-header></test-header>\n\n        <section class=\"new-link\">\n            <div class=\"control-group\">\n                <div><label for=\"title\">Title:</label></div>\n                <div><input name=\"title\" #newtitle></div>\n            </div>\n            <div class=\"control-group\">\n                <div><label for=\"link\">Link:</label></div>\n                <div><input name=\"link\" #newlink></div>\n            </div>\n\n            <button (click)=\"addArticle(newtitle, newlink)\">Submit Link</button>\n        </section>\n\n        <test-article *ng-for=\"#article of articles\" [article]=\"article\">{{ article }}</test-article>\n    "
+            templateUrl: 'views/ProductForm.html'
         }), 
         __metadata('design:paramtypes', [])
-    ], ConsoleApp);
-    return ConsoleApp;
+    ], ProductForm);
+    return ProductForm;
 })();
-angular2_1.bootstrap(ConsoleApp);
+var StartApp = (function () {
+    function StartApp() {
+    }
+    StartApp = __decorate([
+        angular2_1.Component({
+            selector: 'start-app'
+        }),
+        angular2_1.View({
+            directives: [MyHeader, ProductForm, ProductsList, MyFooter],
+            templateUrl: 'views/StartApp.html'
+        }), 
+        __metadata('design:paramtypes', [])
+    ], StartApp);
+    return StartApp;
+})();
+angular2_1.bootstrap(StartApp);

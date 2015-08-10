@@ -1,0 +1,16 @@
+<section class="new-link">
+    <div class="control-group">
+        <div><label for="title">Title:</label></div>
+        <div><input name="title" #newtitle (keyup)></div>
+    </div>
+    <div class="control-group">
+        <div><label for="link">Link:</label></div>
+        <div><input name="link" #newlink (keyup)></div>
+    </div>
+
+    <div>
+        <p>{{newtitle.value}} | {{newlink.value}}</p>
+    </div>
+
+    <button (click)="addProduct(newtitle, newlink)">Submit Product</button>
+</section>

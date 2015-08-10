@@ -1,8 +1,8 @@
 /// <reference path="typings/angular2/angular2.d.ts" />
-
 import {
     Component,
     NgFor,
+    NgIf,
     View,
     bootstrap,
 } from "angular2/angular2";
@@ -10,38 +10,45 @@ import {
 
 // Header component
 @Component({
-    selector: 'test-header'
+    selector: 'my-header'
 })
 
 @View({
     directives: [NgFor],
-    template: `
-        <div class="header">
-            <div>
-                <article>
-                    Hello {{ name }}
-                </article>
-            </div>
-            <div>
-                <ul class="list">
-                    <li class="list-item" *ng-for="#name of names">Hello {{ name }}</li>
-                </ul>
-            </div>
-        </div>
-    `
+    templateUrl: 'views/MyHeader.html'
 })
 
-class HeaderApp {
-    name: string;
+class MyHeader {
+    myName: string;
     names: Array<string>;
 
     constructor() {
-        this.name = 'Matias';
+        this.myName = 'Matias';
         this.names = ['Pepe', 'Juan', 'Pedro'];
     }
 }
 
-class Article {
+// Footer component
+@Component({
+    selector: 'my-footer'
+})
+
+@View({
+    directives: [NgFor],
+    templateUrl: 'views/MyFooter.html'
+})
+
+class MyFooter {
+    myName: string;
+    names: Array<string>;
+
+    constructor() {
+        this.myName = 'Matias';
+        this.names = ['Pepe', 'Juan', 'Pedro'];
+    }
+}
+
+class Product {
     title: string;
     link: string;
     votes: number;
@@ -58,7 +65,7 @@ class Article {
     }
 
     voteUp() {
-        this.votes += 1;
+        this.votes++;
         return false;
         // Javascript, by default, propagates the click event to all
         // the parent components. Becouse the click event is propagated
@@ -67,89 +74,91 @@ class Article {
     }
 
     voteDown() {
-        this.votes -= 1;
+        this.votes--;
         return false;
     }
 }
 
-// Article component
+class ProductsService {
+    products: Array<Product>;
+
+    constructor() {
+        this.products = [
+            new Product('Angular 2', 'http://angular.io'),
+            new Product('Fullstack', 'http://fullstack.io')
+        ];
+    }
+}
+
+// Product Row component
 @Component({
-    selector: 'test-article',
-    properties: ['article'],
+    selector: 'product-row',
+    properties: ['product: named-product'],
 })
 
 @View({
-    template: `
-        <article>
-            <div class="votes">{{ article.votes }}</div>
-            <div class="main">
-                <h2>
-                    <a href="{{ article.link }}">{{ article.title }}</a>
-                    <span>({{ article.domain() }})</span>
-                </h2>
-                <ul>
-                    <li>
-                        <a href (click)='article.voteUp()'>upvote</a>
-                    </li>
-                    <li>
-                        <a href (click)='article.voteDown()'>downvote</a>
-                    </li>
-                </ul>
-            </div>
-        </article>
-    `
+    templateUrl: 'views/ProductRow.html'
 })
 
-class ArticleApp {
-    article: Article;
+class ProductRow {
+    product: Product;
 }
 
 
-// Console component
+// Product List component
 @Component({
-    selector: 'test-console'
+    selector: 'products-list',
+    appInjector: [ProductsService]
 })
 
 @View({
-    directives: [NgFor, ArticleApp, HeaderApp],
-    template: `
-        <test-header></test-header>
-
-        <section class="new-link">
-            <div class="control-group">
-                <div><label for="title">Title:</label></div>
-                <div><input name="title" #newtitle></div>
-            </div>
-            <div class="control-group">
-                <div><label for="link">Link:</label></div>
-                <div><input name="link" #newlink></div>
-            </div>
-
-            <button (click)="addArticle(newtitle, newlink)">Submit Link</button>
-        </section>
-
-        <test-article *ng-for="#article of articles" [article]="article">{{ article }}</test-article>
-    `
+    directives: [NgFor, ProductRow],
+    templateUrl: 'views/ProductList.html'
 })
 
-class ConsoleApp {
-    articles: Array<Article>;
+class ProductsList {
+    products: Array<Product>;
 
-    constructor() {
-        this.articles = [
-            new Article('Angular 2', 'http://angular.io'),
-            new Article('Fullstack', 'http://fullstack.io')
-        ];
+    constructor(productsService: ProductsService) {
+        this.products = productsService.products;
     }
+}
 
-    addArticle(title, link) {
-        this.articles.push(new Article(title.value, link.value));
+
+// Products Form component
+@Component({
+    selector: 'product-form',
+    appInjector: [ProductsService]
+})
+
+@View({
+    templateUrl: 'views/ProductForm.html'
+})
+
+class ProductForm {
+    addProduct(title, link) {
+        //this.products.push(new Product(title.value, link.value));
+        console.log("Adding product with title", title.value, "and link", link.value);
         title.value = '';
         link.value = '';
-        //console.log("Adding article with title", title.value, "and link", link.value);
     }
+}
+
+
+// App component
+@Component({
+    selector: 'start-app'
+})
+
+@View({
+    directives: [MyHeader, ProductForm, ProductsList, MyFooter],
+    templateUrl: 'views/StartApp.html'
+})
+
+class StartApp {
+
 }
 
 
 // bootstraping
-bootstrap(ConsoleApp);
+bootstrap(StartApp);
