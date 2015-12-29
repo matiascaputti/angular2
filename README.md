@@ -4,5 +4,5 @@
 ### Getting started
 ```
 npm install
-tsc --watch
+npm start
 ```
